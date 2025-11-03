@@ -110,7 +110,7 @@ class MobileOptimizer {
         let startY = 0;
         let startX = 0;
 
-        // Music cards swipe interaction
+        // Music cards touch interaction (simplified to avoid scroll conflicts)
         document.querySelectorAll('.music-card').forEach(card => {
             card.addEventListener('touchstart', (e) => {
                 startY = e.touches[0].clientY;
@@ -123,14 +123,8 @@ class MobileOptimizer {
                 }
             }, { passive: true });
 
-            card.addEventListener('touchmove', (e) => {
-                // Only prevent default if it's a horizontal swipe and event is cancelable
-                const currentX = e.touches[0].clientX;
-                const diffX = Math.abs(startX - currentX);
-                if (diffX > 10 && e.cancelable) {
-                    e.preventDefault(); // Prevent scrolling while swiping horizontally
-                }
-            }, { passive: false });
+            // Removed touchmove to avoid scroll conflicts
+            // Natural scrolling behavior is preserved
 
             card.addEventListener('touchend', (e) => {
                 const endY = e.changedTouches[0].clientY;
@@ -141,11 +135,15 @@ class MobileOptimizer {
                 // Reset scale
                 card.style.transform = '';
 
-                // Simple swipe detection (optional feature)
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-                    // Horizontal swipe detected
+                // Simple tap detection with light haptic feedback
+                if (Math.abs(diffX) < 20 && Math.abs(diffY) < 20) {
+                    // This is a tap, not a swipe
+                    if (this.userHasInteracted) {
+                        this.safeVibrate(10); // Light tap feedback
+                    }
+                } else if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                    // Horizontal swipe detected (but don't interfere with scroll)
                     this.showSwipeEffect(card, diffX > 0 ? 'left' : 'right');
-                    // Stronger vibration for successful swipe
                     if (this.userHasInteracted) {
                         this.safeVibrate(15);
                     }

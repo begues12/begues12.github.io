@@ -257,6 +257,22 @@
     </div>
   </section>
 
+  <!-- Performance Section -->
+  <section class="performance-section loading">
+    <div class="performance-content">
+      <h2 class="section-title">
+        <i class="fas fa-star"></i> EXPERIENCIA EN VIVO
+      </h2>
+      <p class="performance-description">
+        Más de dos décadas llevando la auténtica esencia de la makina a los mejores eventos. 
+        Una experiencia única con sonidos que han marcado la historia de la música electrónica española.
+      </p>
+      <div class="performance-image-container">
+        <img src="./Inicio_files/photo_2024-05-19_21-02-17.png" alt="DJ Konik Performance" class="performance-image">
+      </div>
+    </div>
+  </section>
+
   <!-- Contact Section -->
   <section id="contacto" class="footer-section loading">
     <div class="footer-content">
@@ -268,20 +284,9 @@
           <i class="fas fa-calendar-check"></i> FECHAS LIMITADAS
         </h3>
         <p>Ponte en contacto y reserva tu día. Una experiencia única con la leyenda de la makina.</p>
-        <div class="performance-image-container">
-          <img src="./Inicio_files/photo_2024-05-19_21-02-17.png" alt="DJ Konik Performance" class="performance-image">
-        </div>
       </div>
       <div class="footer-cta">
         <img src="./Inicio_files/wallpaper-makineros-xxl-fabrik-2k-1024x540.png" alt="Makina Scene" style="width: 100%; max-width: 300px; border-radius: 10px; margin-bottom: 1rem; filter: drop-shadow(0 0 15px var(--neon-magenta));">
-        <div style="margin-top: 1rem;">
-          <a href="mailto:CONTRATACION@BOOMMUSIC.ES" class="cta-button" style="display: block; margin-bottom: 1rem;">
-            <i class="fas fa-envelope"></i> CONTRATACIÓN
-          </a>
-          <a href="https://wa.me/34683411664" class="cta-button" target="_blank">
-            <i class="fab fa-whatsapp"></i> WHATSAPP
-          </a>
-        </div>
       </div>
     </div>
   </section>
@@ -293,11 +298,29 @@
 
     // Loading animations
     document.addEventListener('DOMContentLoaded', function() {
+      // Fix header spacing dynamically
+      function adjustHeroSpacing() {
+        const header = document.querySelector('.main-header');
+        const heroBanner = document.querySelector('.hero-banner');
+        if (header && heroBanner) {
+          const headerHeight = header.offsetHeight;
+          heroBanner.style.marginTop = (headerHeight + 20) + 'px';
+        }
+      }
+      
+      // Adjust spacing initially and after resize
+      adjustHeroSpacing();
+      window.addEventListener('resize', adjustHeroSpacing);
+      
       // Add loaded class to trigger animations
       const loadingElements = document.querySelectorAll('.loading');
       loadingElements.forEach((element, index) => {
         setTimeout(() => {
           element.classList.add('loaded');
+          // Re-adjust spacing after loading animations
+          if (index === 0) {
+            setTimeout(adjustHeroSpacing, 100);
+          }
         }, index * (isMobile ? 100 : 200));
       });
 
@@ -315,17 +338,39 @@
         });
       });
 
-      // Parallax effect for background (disabled on mobile for performance)
-      if (!isMobile) {
-        window.addEventListener('scroll', function() {
-          const scrolled = window.pageYOffset;
-          const rate = scrolled * -0.5;
+      // Header scroll effect
+      const header = document.querySelector('.main-header');
+      let lastScrollTop = 0;
+      const scrollThreshold = isMobile ? 50 : 100; // Collapse faster on mobile
+      
+      window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const wasScrolled = header.classList.contains('scrolled');
+        
+        // Add/remove scrolled class based on scroll position
+        if (scrollTop > scrollThreshold) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+        
+        // Re-adjust spacing if header state changed
+        const isScrolled = header.classList.contains('scrolled');
+        if (wasScrolled !== isScrolled) {
+          setTimeout(adjustHeroSpacing, 100);
+        }
+        
+        // Parallax effect for background (disabled on mobile for performance)
+        if (!isMobile) {
+          const rate = scrollTop * -0.5;
           const heroBackground = document.querySelector('.hero-bg');
           if (heroBackground) {
             heroBackground.style.transform = `translateY(${rate}px)`;
           }
-        });
-      }
+        }
+        
+        lastScrollTop = scrollTop;
+      });
 
       // Mobile-specific optimizations
       if (isMobile) {
