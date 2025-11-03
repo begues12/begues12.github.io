@@ -3,18 +3,26 @@
 
 class DJKonikEffects {
     constructor() {
+        this.isMobile = window.innerWidth <= 768;
         this.init();
     }
 
     init() {
         this.createNeonParticles();
         this.setupAudioVisualization();
-        this.setupInteractiveHovers();
+        // Only setup complex hover effects on desktop
+        if (!this.isMobile) {
+            this.setupInteractiveHovers();
+        }
         this.setupScrollEffects();
     }
 
     // Create floating neon particles
     createNeonParticles() {
+        // Detect if it's mobile for performance optimization
+        const isMobile = window.innerWidth <= 768;
+        const particleCount = isMobile ? 50 : 150; // Fewer particles on mobile
+        
         const particleContainer = document.createElement('div');
         particleContainer.className = 'particle-container';
         particleContainer.style.cssText = `
@@ -25,29 +33,36 @@ class DJKonikEffects {
             height: 100%;
             pointer-events: none;
             z-index: -1;
+            overflow: hidden;
         `;
         document.body.appendChild(particleContainer);
 
-        // Create particles
-        for (let i = 0; i < 50; i++) {
-            this.createParticle(particleContainer);
+        // Create particles with mobile optimization
+        for (let i = 0; i < particleCount; i++) {
+            this.createParticle(particleContainer, isMobile);
         }
     }
 
-    createParticle(container) {
+    createParticle(container, isMobile = false) {
         const particle = document.createElement('div');
         const colors = ['#00ffff', '#ff00ff', '#00ff00', '#ffff00', '#8000ff'];
         const color = colors[Math.floor(Math.random() * colors.length)];
         
+        // Optimize particle size and effects for mobile
+        const size = isMobile ? '2px' : '4px';
+        const blurAmount = isMobile ? '5px' : '10px';
+        const animationDuration = isMobile ? (3 + Math.random() * 5) : (5 + Math.random() * 10);
+        
         particle.style.cssText = `
             position: absolute;
-            width: 2px;
-            height: 2px;
+            width: ${size};
+            height: ${size};
             background: ${color};
             border-radius: 50%;
-            box-shadow: 0 0 10px ${color};
-            opacity: 0.7;
-            animation: float ${5 + Math.random() * 10}s linear infinite;
+            box-shadow: 0 0 ${blurAmount} ${color};
+            opacity: ${isMobile ? '0.5' : '0.7'};
+            animation: float ${animationDuration}s linear infinite;
+            will-change: transform, opacity;
         `;
 
         // Random starting position
@@ -60,9 +75,9 @@ class DJKonikEffects {
         setTimeout(() => {
             if (particle.parentNode) {
                 particle.parentNode.removeChild(particle);
-                this.createParticle(container);
+                this.createParticle(container, isMobile);
             }
-        }, (5 + Math.random() * 10) * 1000);
+        }, animationDuration * 1000);
     }
 
     // Setup audio visualization effect
@@ -184,6 +199,31 @@ const additionalStyles = `
         100% {
             transform: translateY(-100vh) rotate(360deg);
             opacity: 0;
+        }
+    }
+
+    /* Mobile optimizations for particles */
+    @media (max-width: 768px) {
+        .particle-container {
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
         }
     }
 
