@@ -51,7 +51,7 @@ class DJKonikEffects {
         // Optimize particle size and effects for mobile
         const size = isMobile ? '2px' : '4px';
         const blurAmount = isMobile ? '5px' : '10px';
-        const animationDuration = isMobile ? (3 + Math.random() * 5) : (5 + Math.random() * 10);
+        const animationDuration = isMobile ? (8 + Math.random() * 12) : (5 + Math.random() * 10);
         
         particle.style.cssText = `
             position: absolute;
@@ -211,17 +211,17 @@ const additionalStyles = `
         
         @keyframes float {
             0% {
-                transform: translateY(100vh);
+                transform: translateY(120vh);
                 opacity: 0;
             }
-            10% {
-                opacity: 0.5;
+            15% {
+                opacity: 0.4;
             }
-            90% {
-                opacity: 0.5;
+            85% {
+                opacity: 0.4;
             }
             100% {
-                transform: translateY(-100vh);
+                transform: translateY(-120vh);
                 opacity: 0;
             }
         }
