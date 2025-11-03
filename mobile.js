@@ -124,10 +124,10 @@ class MobileOptimizer {
             }, { passive: true });
 
             card.addEventListener('touchmove', (e) => {
-                // Only prevent default if it's a horizontal swipe
+                // Only prevent default if it's a horizontal swipe and event is cancelable
                 const currentX = e.touches[0].clientX;
                 const diffX = Math.abs(startX - currentX);
-                if (diffX > 10) {
+                if (diffX > 10 && e.cancelable) {
                     e.preventDefault(); // Prevent scrolling while swiping horizontally
                 }
             }, { passive: false });

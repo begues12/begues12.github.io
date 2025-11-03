@@ -269,7 +269,7 @@
         </h3>
         <p>Ponte en contacto y reserva tu día. Una experiencia única con la leyenda de la makina.</p>
         <div class="performance-image-container">
-          <img src="./Inicio_files/photo_2024-05-19_21-02-17.jpg" alt="DJ Konik Performance" class="performance-image">
+          <img src="./Inicio_files/photo_2024-05-19_21-02-17.png" alt="DJ Konik Performance" class="performance-image">
         </div>
       </div>
       <div class="footer-cta">
@@ -315,32 +315,17 @@
         });
       });
 
-      // Header scroll effect
-      const header = document.querySelector('.main-header');
-      let lastScrollTop = 0;
-      const scrollThreshold = isMobile ? 50 : 100; // Collapse faster on mobile
-      
-      window.addEventListener('scroll', function() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        // Add/remove scrolled class based on scroll position
-        if (scrollTop > scrollThreshold) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
-        }
-        
-        // Parallax effect for background (disabled on mobile for performance)
-        if (!isMobile) {
-          const rate = scrollTop * -0.5;
+      // Parallax effect for background (disabled on mobile for performance)
+      if (!isMobile) {
+        window.addEventListener('scroll', function() {
+          const scrolled = window.pageYOffset;
+          const rate = scrolled * -0.5;
           const heroBackground = document.querySelector('.hero-bg');
           if (heroBackground) {
             heroBackground.style.transform = `translateY(${rate}px)`;
           }
-        }
-        
-        lastScrollTop = scrollTop;
-      });
+        });
+      }
 
       // Mobile-specific optimizations
       if (isMobile) {
